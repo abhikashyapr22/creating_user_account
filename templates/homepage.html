@@ -1,0 +1,71 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+    <title>create account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://WWW.w3school.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?font-family=raleway">
+
+    <style>
+
+    .p {
+        color: red;
+
+    }
+
+    .center {
+          margin: auto;
+          width: 50%;
+          border: 3px solid green;
+          padding: 10px;
+        }
+
+    .h1 {
+        text-align:center;
+        }
+
+         div {
+             max-width:50%;
+             border:2px solid black;
+             padding:10px;
+
+             text-align:centre;
+             background-color:lightgreen;
+             color:black;
+             display: flex;
+             justify-content: center;
+          }
+    </style>
+
+</head>
+
+<body>
+    <h1 class="h1">sign up</h1>
+
+    <div class="center">
+
+        <form action="{{ url_for('create_account') }}" method="POST" >
+            <p class="p">{{data}}</p>
+            first name:<input type="text" name="firstname" placeholder=" eg abhishek" required>
+            lastname:<input type="text" name="lastname" placeholder=" eg kashyap" required><br><br>
+            gender:<input type="radio" name="gender" value="male" checked>male
+                    <input type="radio" name="gender" value="female">female
+                    <input type="radio" name="gender" value="other">other<br><br>
+            select your country:
+                 <select name="country" size="1">
+                      <option value="india">India</option>
+                      <option value="america">America</option>
+                      <option value="africa">Africa</option>
+                      <option value="england">England</option>
+                  </select><br><br>
+            create email address:<input type="email" name="email" placeholder="eg abhi12@gmail.com" required><br><br>
+            password:<input type="password" name="psw1" placeholder="password" required><br><br>
+            password:<input type="password" name="psw2" placeholder="confirm password" required><br><br>
+           <input type="checkbox" name="privacy" value="accepted" required>accept privacy policy<br><br>
+           <input type="submit" name="submit" value="submit" onclick="validatePassword()">
+        </form>
+    </div>
+</body>
+
+</html>
