@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-import mysql.connector as connection
+import pymongo
 
 app = Flask(__name__)
 
@@ -20,41 +20,45 @@ def create_account():
     confirm_password = request.form['psw2']
 
     try:
-        request.form['privacy']
+        client = pymongo.MongoClient(
+            "mongodb://root:root@cluster0-shard-00-00.juny6.mongodb.net:27017,"
+            "cluster0-shard-00-01.juny6.mongodb.net:27017,"
+            "cluster0-shard-00-02.juny6.mongodb.net:27017/?ssl=true&replicaSet=atlas-av6fij-shard-0&authSource=admin"
+            "&retryWrites=true&w=majority")
     except:
-        return render_template('homepage.html', data='Please accept privacy policy! ')
+        return render_template('homepage.html', data='Unable to connect to database! ')
+
+    database = client['user_database']
+    collection = database['user_accounts']
+
+    data = {
+        'First Name': first_name,
+        'Last Name': last_name,
+        'Gender': gender,
+        'Country': country,
+        'Email': email,
+        'Create Password': create_password,
+        'Confirm Password': confirm_password
+    }
 
     try:
-        mydb = connection.connect(host='localhost', user='root', passwd='Abhishek@1067', database='mysql_python')
-        cursor = mydb.cursor()
-    except Exception as e:
-        return e
-
-    try:
-        cursor.execute(f"SELECT count(*) FROM user_accounts where Email = '{email}' limit 1")
+        query = {"Email": email}
+        x = collection.find_one(query)
     except:
         return render_template('homepage.html', data='Please check your connection')
 
-    if cursor.fetchall()[0][0]:
+    if x:
         return render_template('homepage.html', data='User already exists! Try some different user name')
 
     elif create_password != confirm_password:
         return render_template('homepage.html', data='Passwords do not match! Please try again')
 
     else:
-        sql = "INSERT INTO user_accounts " \
-              "(First_Name, Last_Name, Gender, Country, Email, Create_password, Confirm_password) " \
-              "VALUES (%s, %s, %s, %s, %s, %s, %s)"
-
-        values = (first_name, last_name, gender, country, email, create_password, confirm_password)
         try:
-            cursor.execute(sql, values)
-            mydb.commit()
+            collection.insert_one(data)
+            return render_template("data_received.html", data=first_name)
         except Exception as e:
-            return e
-
-        mydb.close()
-        return render_template("data_received.html", data=first_name)
+            return str(e)
 
 
 if __name__ == "__main__":
