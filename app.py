@@ -54,7 +54,7 @@ def create_account():
             flash("Please accept privacy policy!")
             return redirect(url_for('homepage'))
 
-        if StudentAccount.query.filter_by(email='email@gmail.com').first():
+        if StudentAccount.query.filter_by(email=email).first():
             flash("User already exists! Try some different email")
             return redirect(url_for('homepage'))
 
