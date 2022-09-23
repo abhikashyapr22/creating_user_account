@@ -72,7 +72,6 @@ def create_account():
                 flash(f'{e}')
                 return redirect(url_for('homepage'))
 
-            db.close()
             return render_template("data_received.html", data=first_name)
     else:
         return redirect(url_for('homepage'))
